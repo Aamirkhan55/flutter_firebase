@@ -54,6 +54,18 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     children: users!
                         .map((user) => ListTile(
+                              trailing: GestureDetector(
+                                onTap: () {
+                                  _updateData(
+                                  User(
+                                  id: user.id,
+                                  name: "Jhon wick" ,
+                                  age: 24,
+                                  address: 'Kashmir'
+                                  ));
+                                },
+                                child: const Icon(Icons.update),
+                              ),
                               title: Text(user.name!),
                               subtitle: Text(user.address!),
                             ))
@@ -86,4 +98,19 @@ class HomePage extends StatelessWidget {
     return userCollection.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => User.fromSnapshot(e)).toList());
   }
+
+ // Update Data
+
+ _updateData (User user) {
+   final userCollection = FirebaseFirestore.instance.collection('users');
+
+   final newData = User(
+    id: user.id,
+    name: user.name,
+    age: user.age,
+    address: user.address
+   ).toJson();
+
+   userCollection.doc(user.id).update(newData);
+ }
 }
