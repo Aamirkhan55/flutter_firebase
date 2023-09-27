@@ -36,8 +36,9 @@ class HomePage extends StatelessWidget {
                 },
                 child: const Text('Create Data')),
             const SizedBox(height: 10),
-            FutureBuilder<List<User>>(
-              future: _readData(),
+
+            StreamBuilder<List<User>>(
+              stream: _readData(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -80,9 +81,9 @@ class HomePage extends StatelessWidget {
   }
 
   // Read Data
-  Future<List<User>> _readData() {
+  Stream<List<User>> _readData() {
     final userCollection = FirebaseFirestore.instance.collection('users');
-    return userCollection.get().then((querySnapshot) =>
+    return userCollection.snapshots().map((querySnapshot) =>
         querySnapshot.docs.map((e) => User.fromSnapshot(e)).toList());
   }
 }
