@@ -54,6 +54,12 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     children: users!
                         .map((user) => ListTile(
+                              leading: GestureDetector(
+                                onTap: () {
+                                  _deleteData(user.id!);
+                                },
+                                child: const Icon(Icons.delete), 
+                              ),
                               trailing: GestureDetector(
                                 onTap: () {
                                   _updateData(
@@ -112,5 +118,12 @@ class HomePage extends StatelessWidget {
    ).toJson();
 
    userCollection.doc(user.id).update(newData);
+ }
+
+ // Delete Data
+ _deleteData(String id) {
+   final userCollection = FirebaseFirestore.instance.collection('users');
+
+   userCollection.doc(id).delete();
  }
 }
